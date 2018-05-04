@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html 	xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<title>Bored-Borrow</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+	
+	<style>
+		h1 {
+			display: inline;
+		}
+		.right {
+			float: right;
+			font-weight: bold;
+		}
+		body {
+			margin-top: 20px;
+		}
+		table {
+			margin-top: 20px;
+		}
+	
+	</style>
+</head>
+<body>
+	<div class="container">
+		
+		<h1>Games</h1>
+		
+		<h2 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h2>
+		<div class="col-md-4" style="padding:20px 0">
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Sign Out" class="btn btn-danger"/>
+			</form>
+		</div>
+		<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-secondary right" th:href="@{/settings}">Admin Settings &nbsp; &#9874;</a>
+		<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-success right" th:href="@{/add}">Add game &nbsp; &#x271A;</a>
+		
+		
+		<table class="table table-striped">
+			<thead>
+			    <tr>
+			    	<th scope="col">Cover</th> <!-- Image header (blank) -->
+				    <th scope="col">Name</th>
+				    <th scope="col">Genre</th>
+				    <th scope="col">Language</th>
+				    <th scope="col">Min Players</th>
+				    <th scope="col">Max Players</th>
+				    <th scope="col">Platform</th>
+				    <th scope="col" sec:authorize="hasAuthority('ADMIN')"></th> <!-- Edit column header -->
+				    <th scope="col" sec:authorize="hasAuthority('ADMIN')"></th> <!-- Delete column header -->
+				    <th scope="col" sec:authorize="hasAuthority('USER')"></th> <!-- Reserve column header -->
+			    </tr>
+			</thead>
+				<tbody>
+					<tr th:each="game: ${games}">
+						<td align="center"><img th:src="${game.img}" height="140" /></td>
+						<td th:text="${game.name}"></td>						
+						<td th:text="${game.genre.name}"></td>
+						<td th:text="${game.language.name}"></td>
+						<td th:text="${game.minPlayers}"></td>
+						<td th:text="${game.maxPlayers}"></td>
+						<td th:text="${game.type.name}"></td>
+						<td sec:authorize="hasAuthority('ADMIN')"> <a class="btn btn-sm btn-info" th:href="@{/edit/{id}(id=${game.id})}">Edit</a> </td>
+						<td sec:authorize="hasAuthority('ADMIN')"> <a class="btn btn-sm btn-danger" th:href="@{/delete/{id}(id=${game.id})}">Delete</a></td>
+						<td sec:authorize="hasAuthority('USER')"> <a class="btn btn-sm btn-info" th:href="@{/reserve/{id}/{username}(id=${game.id}, username=${#httpServletRequest.remoteUser})}">Reserve</a></td>
+<!-- 						<td sec:authorize="hasAuthority('USER')"> <a class="btn btn-sm btn-info" th:href="@{/sendbooking/{id, userid}(id=${game.id}, userid='1')}">Reserve</a></td> -->
+<!-- 						<td sec:authorize="hasAuthority('USER')"> -->
+<!-- 							<form th:object="${game}" th:action="@{/sendbooking}" action="#" method="post"> -->
+<!-- 								<div class="form-group"> -->
+<!-- 									<input type="hidden" value="${game.gameid}" class="form-control"/> Game id -->
+<!-- 									<input type="hidden" value="${game.name}" class="form-control"/> Game id -->
+<!-- 									<input type="hidden" value="${game.img}" class="form-control"/> Game id -->
+<!-- 									<input type="hidden" value="${game.genreid}" class="form-control"/> Game id -->
+<!-- 									<input type="hidden" value="${game.languageid}" class="form-control"/> Game id -->
+<!-- 									<input type="hidden" value="${game.minPlayers}" class="form-control"/> Game id -->
+<!-- 									<input type="hidden" value="${game.maxPlayers}" class="form-control"/> Game id -->
+<!-- 									<input type="hidden" value="${game.typeid}" class="form-control"/> Game id -->
+<!-- 									<input type="hidden" value="${user.username.findByName(${#httpServletRequest.remoteUser}).get(0)" class="form-control"/> -->
+<!-- 									<input type="hidden" value="${null}" class="form-control"/> Game id -->
+<!-- 									<button type="submit" class="btn btn-primary">Reserve</button> -->
+<!-- 								</div> -->
+<!-- 							</form> -->
+<!-- 						</td> -->
+					</tr>
+				</tbody>
+			</table>
+			
+			
+		</div>
+	
+</body>
+</html>

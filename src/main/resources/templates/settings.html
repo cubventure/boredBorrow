@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html 	xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<title>Bored-Borrow</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+	
+	<style>
+		h1 {
+			display: inline;
+		}
+		.right {
+			float: right;
+			font-weight: bold;
+		}
+		body {
+			margin-top: 20px;
+		}
+		table {
+			margin-top: 20px;
+		}
+		.inline-block {
+			display: inline-block;
+		}
+		.grid {
+			display: grid;
+			grid-template-columns: 35% auto 60%;
+		}
+		.item-1 {
+			grid-column-start: 1;
+			padding-top: 15px;
+		}
+		.item-2 {
+			grid-column-start: 3;
+		}
+		.btn-pad {
+			margin-top: 8px;
+		}
+		.tab-pad {
+			padding-left: 2em;
+		}
+		.yellow {
+			background-color: #fff5d8;
+			padding: 0 2em;
+		}
+	
+	</style>
+</head>
+<body>
+	<div class="container">
+		
+		<h1>Settings</h1>
+		
+		<h2 th:inline="text">[[${#httpServletRequest.remoteUser}]] settings</h2>
+		<div class="col-md-4" style="padding:20px 0">
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Sign Out" class="btn btn-danger"/>
+			</form>
+			<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-info" th:href="@{/games}">&#xab; &nbsp; Go back</a>
+		</div>
+		
+		<div class="grid yellow"> <!-- User grid -->
+		
+			<form th:object="${user}" th:action="@{saveuser}" action="#" method="post" class="item-1">
+				<div class="form-group">			
+					
+					<label for="user-name"><strong>Add a new user</strong></label>
+						<input type="text" id="user-name" class="form-control" placeholder="a####### -- i.e their student number" th:field="*{username}" />
+						
+					<label for="user-pw" class="tab-pad"><strong>Enter a hashed password </strong><a href="https://www.browserling.com/tools/bcrypt" target="_blank">Hash generator</a></label>
+						<input type="text" id="user-pw" class="form-control" placeholder="Enter hashed password" th:field="*{passwordHash}" />
+						
+					<label for="user-email" class="tab-pad"><strong>E-mail address</strong></label>
+						<input type="text" id="user-email" class="form-control" placeholder="Enter their e-mail address" th:field="*{email}" />
+						
+					<label for="user-role" class="tab-pad"><strong>Enter their role</strong></label>
+						<input type="text" id="user-role" class="form-control" placeholder="ADMIN or USER" th:field="*{role}" />	
+						
+					<button type="submit" class="btn btn-warning btn-pad">Create new user</button>	
+				</div>			
+			</form>	
+		
+			<table class="table table-striped item-2">
+				<thead>
+				    <tr>
+				    	<th scope="col">Current Users</th>
+				    	<th scope="col">E-mail</th>
+				    	<th scope="col">Role</th>
+					    <th scope="col" sec:authorize="hasAuthority('ADMIN')"></th> <!-- Delete column header -->
+					    
+				    </tr>
+				</thead>
+				<tbody>
+					<tr th:each="user: ${users}">
+						<td th:text="${user.username}"></td>
+						<td th:text="${user.email}"></td>
+						<td th:text="${user.role}"></td> <!-- Prevents admin role from being able to be deleted from the user interface side -->
+						<td sec:authorize="hasAuthority('ADMIN')"> <a class="btn btn-sm btn-danger" th:if="${user.role == 'USER'}" th:href="@{/deleteuser/{id}(id=${user.id})}">Delete</a></td>
+					</tr>
+				</tbody>
+			</table>		
+		
+		</div> <!-- Close genre grid -->
+		
+		<div class="grid"> <!-- Genre grid -->
+		
+			<form th:object="${genre}" th:action="@{savegenre}" action="#" method="post" class="item-1">
+				<div class="form-group">			
+					
+					<label for="genre-name"><strong>Add a new Genre type</strong></label>
+						<input type="text" id="genre-name" class="form-control" placeholder="Enter the new genre" th:field="*{name}" />
+						
+					<button type="submit" class="btn btn-success btn-pad">Save</button>	
+				</div>			
+			</form>	
+		
+			<table class="table table-striped item-2">
+				<thead>
+				    <tr>
+				    	<th scope="col">Current Genres</th>
+					    <th scope="col" sec:authorize="hasAuthority('ADMIN')"></th> <!-- Delete column header -->
+					    
+				    </tr>
+				</thead>
+				<tbody>
+					<tr th:each="genre: ${genres}">
+						<td th:text="${genre.name}"></td>
+						<td sec:authorize="hasAuthority('ADMIN')"> <a class="btn btn-sm btn-danger" th:href="@{/deletegenre/{id}(id=${genre.genreid})}">Delete</a> <i>Caution: will delete all games in <span th:text="${genre.name}"></span> genre</i></td>
+					</tr>
+				</tbody>
+			</table>		
+		
+		</div> <!-- Close genre grid -->
+		
+		<div class="grid"> <!-- Language grid -->
+		
+			<form th:object="${language}" th:action="@{savelanguage}" action="#" method="post" class="item-1">
+				<div class="form-group">			
+					
+					<label for="language-name"><strong>Add a new Language</strong></label>
+						<input type="text" id="language-name" class="form-control" placeholder="Enter the new language" th:field="*{name}" />
+						
+					<button type="submit" class="btn btn-success btn-pad">Save</button>	
+				</div>			
+			</form>	
+		
+			<table class="table table-striped item-2">
+				<thead>
+				    <tr>
+				    	<th scope="col">Current Languages</th>
+					    <th scope="col" sec:authorize="hasAuthority('ADMIN')"></th> <!-- Delete column header -->
+					    
+				    </tr>
+				</thead>
+				<tbody>
+					<tr th:each="language: ${languages}">
+						<td th:text="${language.name}"></td>
+						<td sec:authorize="hasAuthority('ADMIN')"> <a class="btn btn-sm btn-danger" th:href="@{/deletelanguage/{id}(id=${language.languageid})}">Delete</a> <i>Caution: will delete <span th:text="${language.name}"></span> games</i></td>
+					</tr>
+				</tbody>
+			</table>		
+		
+		</div> <!-- Close language grid -->
+		
+		<div class="grid"> <!-- Type (Platform) grid -->
+		
+			<form th:object="${type}" th:action="@{savetype}" action="#" method="post" class="item-1">
+				<div class="form-group">			
+					
+					<label for="platform-name"><strong>Add a new Gaming Platform</strong></label>
+						<input type="text" id="platform-name" class="form-control" placeholder="Enter the new game platform" th:field="*{name}" />
+						
+					<button type="submit" class="btn btn-success btn-pad">Save</button>	
+				</div>			
+			</form>	
+		
+			<table class="table table-striped item-2">
+				<thead>
+				    <tr>
+				    	<th scope="col">Current Platforms</th>
+					    <th scope="col" sec:authorize="hasAuthority('ADMIN')"></th> <!-- Delete column header -->
+					    
+				    </tr>
+				</thead>
+				<tbody>
+					<tr th:each="type: ${types}">
+						<td th:text="${type.name}"></td>
+						<td sec:authorize="hasAuthority('ADMIN')"> <a class="btn btn-sm btn-danger" th:href="@{/deletetype/{id}(id=${type.typeid})}">Delete</a> <i>Caution: will delete all <span th:text="${type.name}"></span> entries</i></td>
+					</tr>
+				</tbody>
+			</table>		
+		
+		</div> <!-- Close type (platform) grid -->
+		
+		
+			
+			
+		</div> <!-- container div -->
+	
+</body>
+</html>

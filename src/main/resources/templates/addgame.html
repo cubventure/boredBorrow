@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Bored-Borrow</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+	<style>
+	
+		form {			
+			padding: 0 5vw;			
+		}
+		input {
+			margin-bottom: 15px;
+		}
+		body {
+			margin-top: 20px;
+		}
+		.right {
+			float: right;
+		}
+	
+	</style>
+</head>
+<body>
+
+	<div class="container">
+	
+<!-- 		<h1>Games</h1> -->
+	
+		<h2>Add a game:</h2>
+		
+		<div>
+			<form th:object="${game}" th:action="@{save}" action="#" method="post">
+				<div class="form-group">			
+					
+					<label for="name">Name</label>
+						<input type="text" id="name" class="form-control" placeholder="Enter the name" th:field="*{name}" />
+					
+					<label for="genre">Genre</label>
+						<select id="genre" th:field="*{genre}" class="form-control">
+							<option th:each="genre: ${genres}" th:value="${genre.genreid}" th:text="${genre.name}"></option>
+						</select>
+					
+					<label for="language">Language</label>
+						<select id="language" th:field="*{language}" class="form-control">
+							<option th:each="language: ${languages}" th:value="${language.languageid}" th:text="${language.name}"></option>
+						</select>
+						
+					<label for="min">Min Players</label> <!-- value fields added to default as 1. NOT WORKING YET -->
+						<input type="number" id="min" class="form-control" value="1" th:field="*{minPlayers}" />
+					
+					<label for="max">Max Players</label>
+						<input type="number" id="max" class="form-control" value="1" th:field="*{maxPlayers}" />
+					
+					<label for="platform">Platform</label>
+						<select id="platform" th:field="*{type}" class="form-control">
+							<option th:each="type: ${types}" th:value="${type.typeid}" th:text="${type.name}"></option>
+						</select>
+					
+					<label for="image">Image URL</label>
+						<input type="text" id="image" class="form-control" placeholder="Image url link" th:field="*{img}" />
+						
+					<button type="submit" class="btn btn-success">Save</button>
+					<a class="btn btn-secondary right" th:href="@{/games}">Cancel</a>	
+				</div>			
+			</form>
+		</div>
+	
+	</div>
+
+
+	
+</body>
+</html>
