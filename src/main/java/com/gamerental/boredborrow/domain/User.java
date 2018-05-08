@@ -1,10 +1,17 @@
 package com.gamerental.boredborrow.domain;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -26,6 +33,20 @@ public class User {
 	
 	@Column(name = "role", nullable = false)
 	private String role;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "reservedBy") //oneToMany relationship declaration
+	private List<Game> reservedGames;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "borrowedBy") //oneToMany relationship declaration
+	private List<Game> bookedGames;
+	
+//	@ManyToMany
+//	@JoinTable(
+//			name="game", 
+//			joinColumns=@JoinColumn(name="reservedBy", referencedColumnName="userid"),
+//			joinColumns=@JoinColumn(name="borrowedBy", referencedColumnName="userid")
+//	private List<Game> games;
+	
 	
 	public User() {		
 	}

@@ -20,6 +20,13 @@
 		table {
 			margin-top: 20px;
 		}
+		.reserved {
+			width: 65px;
+			text-align: center;
+		}
+		.gap {
+			margin: 5px 3px;
+		}
 	
 	</style>
 </head>
@@ -31,11 +38,14 @@
 		<h2 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h2>
 		<div class="col-md-4" style="padding:20px 0">
 			<form th:action="@{/logout}" method="post">
-				<input type="submit" value="Sign Out" class="btn btn-danger"/>
+				<input type="submit" value="Sign Out" class="btn btn-danger gap"/>
 			</form>
 		</div>
-		<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-secondary right" th:href="@{/settings}">Admin Settings &nbsp; &#9874;</a>
-		<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-success right" th:href="@{/add}">Add game &nbsp; &#x271A;</a>
+		<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-secondary right gap" th:href="@{/settings}">Admin Settings &nbsp; &#9874;</a>
+		<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-success right gap" th:href="@{/add}">Add game &nbsp; &#x271A;</a>
+		<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-primary right gap" th:href="@{/borrowlist/admin}">Borrow list &nbsp; &#x1F47E;</a>
+		<a sec:authorize="hasAuthority('USER')" class="btn btn-success right gap" th:href="@{/loans/{username}(username=${#httpServletRequest.remoteUser})}">My Game Loans &nbsp; &#x1F47E;</a>
+		<a sec:authorize="hasAuthority('USER')" class="btn btn-info right gap" th:href="@{/reservations/{username}(username=${#httpServletRequest.remoteUser})}">My Reservations &nbsp; &#x23F2;</a>
 		
 		
 		<table class="table table-striped">
@@ -64,7 +74,21 @@
 						<td th:text="${game.type.name}"></td>
 						<td sec:authorize="hasAuthority('ADMIN')"> <a class="btn btn-sm btn-info" th:href="@{/edit/{id}(id=${game.id})}">Edit</a> </td>
 						<td sec:authorize="hasAuthority('ADMIN')"> <a class="btn btn-sm btn-danger" th:href="@{/delete/{id}(id=${game.id})}">Delete</a></td>
-						<td sec:authorize="hasAuthority('USER')"> <a class="btn btn-sm btn-info" th:href="@{/reserve/{id}/{username}(id=${game.id}, username=${#httpServletRequest.remoteUser})}">Reserve</a></td>
+						<td sec:authorize="hasAuthority('USER')">
+							<a class="btn btn-sm btn-info" th:if="(${game.reservedBy} == null and ${game.borrowedBy} == null) or (${game.reservedBy} == null and ${game.borrowedBy} != null and ${game.borrowedBy.username} != ${#httpServletRequest.remoteUser})" th:href="@{/reserve/{id}/{username}(id=${game.id}, username=${#httpServletRequest.remoteUser})}">Reserve</a>
+							
+							<div class="alert alert-secondary reserved" th:if="(${game.reservedBy} != null and ${game.borrowedBy} == null) or (${game.reservedBy} != null and ${game.borrowedBy} != null and ${game.borrowedBy.username} != ${#httpServletRequest.remoteUser}) or (${game.borrowedBy} != null and ${game.reservedBy} != null and ${game.reservedBy.username} != ${#httpServletRequest.remoteUser})" title="This game has already been reserved">&#x29D6;</div>
+							
+						</td>
+<!-- 						<td> -->
+<!-- 							<div class="alert alert-warning reserved" title="someone has already reserved this" th:if="${game.reservedBy == '3'}">&#x29D6;</div> -->
+<!-- 							<div class="alert alert-success reserved" title="you have reserved this" th:if="${game.reservedBy == '1'}">&#x29D6;</div> -->
+<!-- 							<th:block th:switch="${game.reservedBy.username}"> -->
+<!-- 							<div th:case="null" class="alert alert-primary">you can reserve me</div> -->
+<!-- 							<div th:case="${#httpServletRequest.remoteUser}" class="alert alert-success">you have reserved me</div> -->
+<!-- 							<div th:case="!= ${#httpServletRequest.remoteUser}" class="alert alert-warning">someone else has reserved me</div> -->
+<!-- 							</th:block> -->
+<!-- 						</td> -->
 <!-- 						<td sec:authorize="hasAuthority('USER')"> <a class="btn btn-sm btn-info" th:href="@{/sendbooking/{id, userid}(id=${game.id}, userid='1')}">Reserve</a></td> -->
 <!-- 						<td sec:authorize="hasAuthority('USER')"> -->
 <!-- 							<form th:object="${game}" th:action="@{/sendbooking}" action="#" method="post"> -->

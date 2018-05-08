@@ -8,5 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface GameRepository extends CrudRepository<Game, Long> {
 	
 	List<Game> findByName(String name);
+	List<Game> findByReservedBy(User user);
+	List<Game> findByBorrowedBy(User user);
 
 }

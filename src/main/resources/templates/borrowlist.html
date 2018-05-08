@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html 	xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<title>Bored-Borrow</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+	
+	<style>
+		h1 {
+			display: inline;
+		}
+		.right {
+			float: right;
+			font-weight: bold;
+		}
+		body {
+			margin-top: 20px;
+		}
+		table {
+			margin-top: 20px;
+		}
+		.gap {
+			margin: 5px 3px;
+		}
+		.btn-control{
+			width: 100%;
+			text-align: right;
+		}
+	
+	</style>
+</head>
+<body>
+	<div class="container">
+		
+		<h1>Games</h1>
+		
+		<h2 th:inline="text">[[${#httpServletRequest.remoteUser}]]'s games!</h2>
+		<div class="col-md-4" style="padding:20px 0">
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" value="Sign Out" class="btn btn-danger gap"/>
+			</form>
+		<a class="btn btn-info gap" th:href="@{/games}">&#xab; &nbsp; Go back to game catalog</a>
+		</div>
+		<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-secondary right gap" th:href="@{/settings}">Admin Settings &nbsp; &#9874;</a>
+		
+		
+		<table class="table table-striped">
+			<thead>
+			    <tr>
+			    	<th scope="col">Cover</th> <!-- Image header -->
+				    <th scope="col">Name</th>
+				    <th sec:authorize="hasAuthority('USER')" scope="col">Genre</th>
+				    <th sec:authorize="hasAuthority('USER')" scope="col">Language</th>
+				    <th sec:authorize="hasAuthority('USER')" scope="col">Min Players</th>
+				    <th sec:authorize="hasAuthority('USER')" scope="col">Max Players</th>
+				    <th scope="col">Platform</th>
+				    <th sec:authorize="hasAuthority('USER')" scope="col">Reservation</th>
+				    <th sec:authorize="hasAuthority('ADMIN')" scope="col">Hold reservation by:</th>
+				    <th sec:authorize="hasAuthority('ADMIN')" scope="col">Loan:</th>
+			    </tr>
+			</thead>
+				<tbody>
+					<tr th:if="${game.reservedBy != null or game.borrowedBy != null}" th:each="game: ${games}">
+						<td align="center"><img th:src="${game.img}" height="140" /></td>
+						<td th:text="${game.name}"></td>						
+						<td sec:authorize="hasAuthority('USER')" th:text="${game.genre.name}"></td>
+						<td sec:authorize="hasAuthority('USER')" th:text="${game.language.name}"></td>
+						<td sec:authorize="hasAuthority('USER')" th:text="${game.minPlayers}"></td>
+						<td sec:authorize="hasAuthority('USER')" th:text="${game.maxPlayers}"></td>
+						<td th:text="${game.type.name}"></td>
+						<td th:if="${game.reservedBy != null}"> <!-- Reservation column -->
+							<!-- Pending -->
+							<div sec:authorize="hasAuthority('USER')" th:if="${game.reservedBy != null and game.borrowedBy != null and game.reservedBy.username == #httpServletRequest.remoteUser}">
+								<a sec:authorize="hasAuthority('USER')" class="btn btn-sm btn-dark btn-control" th:href="@{/cancel/{id}/{username}(id=${game.id}, username=${#httpServletRequest.remoteUser})}">Cancel reservation &nbsp; &#x2716;</a>
+								<div class="alert alert-warning" title="reservation pending"><strong>Pending:</strong> You will be notified when the game has been returned</div>
+							</div>
+							<!-- Ready for pickup USER-->
+							<div th:if="${game.reservedBy != null and game.borrowedBy == null and game.reservedBy.username == #httpServletRequest.remoteUser}">
+								<a sec:authorize="hasAuthority('USER')" class="btn btn-sm btn-dark btn-control" th:href="@{/cancel/{id}/{username}(id=${game.id}, username=${#httpServletRequest.remoteUser})}">Cancel reservation &nbsp; &#x2716;</a>
+								<div sec:authorize="hasAuthority('USER')" class="alert alert-primary" title="reservation pending" th:if="${game.reservedBy != null and game.borrowedBy == null}"><strong>Awaiting pickup:</strong><br /> please visit us to collect your game</div>
+							</div>
+							<!-- Awaiting pickup ADMIN -->
+							<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-sm btn-dark btn-control" th:href="@{/cancel/{id}(id=${game.id})}">Cancel reservation &nbsp; &#x2716;</a>
+							<div sec:authorize="hasAuthority('ADMIN')"  th:text="${game.reservedBy.username}" class="alert alert-secondary"></div>
+							<!-- USER: Loan -->
+							<div th:if="${game.borrowedBy} != null and ${game.borrowedBy.username} == ${#httpServletRequest.remoteUser}">
+								<div class="alert alert-success" title="This is loaned out to you">Loaned under your name. Please return after use! &#x1F60A;</div>
+							</div>
+						</td>
+						<td th:if="${game.reservedBy == null}"></td><!-- Only used for if borrowed by no reserve -->
+						<!-- ADMIN: Loan -->
+						<td sec:authorize="hasAuthority('ADMIN')">
+							<!-- Loan button -->
+							<div>
+							<a th:if="${game.borrowedBy == null}" class="btn btn-sm btn-success btn-control" th:href="@{/loan/{id}/{username}(id=${game.id}, username=${game.reservedBy.username})}">Loan game to: &nbsp; &#x1F44D;</a>
+							<div th:if="${game.borrowedBy == null}" sec:authorize="hasAuthority('ADMIN')"  th:text="${game.reservedBy.username}" class="alert alert-success"></div>
+							</div>
+							<!-- Return loan button -->
+							<div>
+							<a th:if="${game.borrowedBy != null}" class="btn btn-sm btn-primary btn-control" th:href="@{/return/{id}(id=${game.id})}">Approve game return by: &nbsp; &#x1F91D;</a>
+							<div th:if="${game.borrowedBy != null}" sec:authorize="hasAuthority('ADMIN')"  th:text="${game.borrowedBy.username}" class="alert alert-primary"></div>
+							</div>
+						</td>
+						
+					</tr>
+				</tbody>
+			</table>			
+			
+		</div>
+	
+</body>
+</html>

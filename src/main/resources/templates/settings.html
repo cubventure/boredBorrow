@@ -44,6 +44,9 @@
 			background-color: #fff5d8;
 			padding: 0 2em;
 		}
+		.gap {
+			margin: 5px 3px;
+		}
 	
 	</style>
 </head>
@@ -55,9 +58,9 @@
 		<h2 th:inline="text">[[${#httpServletRequest.remoteUser}]] settings</h2>
 		<div class="col-md-4" style="padding:20px 0">
 			<form th:action="@{/logout}" method="post">
-				<input type="submit" value="Sign Out" class="btn btn-danger"/>
+				<input type="submit" value="Sign Out" class="btn btn-danger gap"/>
 			</form>
-			<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-info" th:href="@{/games}">&#xab; &nbsp; Go back</a>
+			<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-info gap" th:href="@{/games}">&#xab; &nbsp; Go back to game catalog</a>
 		</div>
 		
 		<div class="grid yellow"> <!-- User grid -->
@@ -111,7 +114,7 @@
 					<label for="genre-name"><strong>Add a new Genre type</strong></label>
 						<input type="text" id="genre-name" class="form-control" placeholder="Enter the new genre" th:field="*{name}" />
 						
-					<button type="submit" class="btn btn-success btn-pad">Save</button>	
+					<button type="submit" class="btn btn-success btn-pad">Save Genre</button>	
 				</div>			
 			</form>	
 		
@@ -141,7 +144,7 @@
 					<label for="language-name"><strong>Add a new Language</strong></label>
 						<input type="text" id="language-name" class="form-control" placeholder="Enter the new language" th:field="*{name}" />
 						
-					<button type="submit" class="btn btn-success btn-pad">Save</button>	
+					<button type="submit" class="btn btn-success btn-pad">Save Language</button>	
 				</div>			
 			</form>	
 		
@@ -171,7 +174,7 @@
 					<label for="platform-name"><strong>Add a new Gaming Platform</strong></label>
 						<input type="text" id="platform-name" class="form-control" placeholder="Enter the new game platform" th:field="*{name}" />
 						
-					<button type="submit" class="btn btn-success btn-pad">Save</button>	
+					<button type="submit" class="btn btn-success btn-pad">Save Platform</button>	
 				</div>			
 			</form>	
 		

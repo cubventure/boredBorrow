@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.gamerental.boredborrow.domain.BorrowRecord;
 import com.gamerental.boredborrow.domain.Game;
 import com.gamerental.boredborrow.domain.GameRepository;
 import com.gamerental.boredborrow.domain.Genre;
@@ -154,8 +153,66 @@ public class GameController {
 		@RequestMapping("/reserve/{id}/{username}")
 		public String addReservation(@PathVariable("id") Long gameid, @PathVariable("username") String username, Model model) {
 			gameRepo.findOne(gameid).setReservedBy(userRepo.findByUsername(username));
+			gameRepo.save(gameRepo.findOne(gameid));
 			return "redirect:../../games";
 		}
+	//Cancel a reservation --user
+		@RequestMapping("/cancel/{id}/{username}")
+		public String cancelReservation(@PathVariable("id") Long gameid, @PathVariable("username") String username, Model model) {
+			gameRepo.findOne(gameid).setReservedBy(null);
+			gameRepo.save(gameRepo.findOne(gameid));
+			model.addAttribute("games", gameRepo.findByReservedBy(userRepo.findByUsername(username)));
+			return "borrowlist";
+		}		
+	//Cancel a reservation --admin
+			@RequestMapping("/cancel/{id}")
+			public String cancelReservationAdmin(@PathVariable("id") Long gameid, Model model) {
+				gameRepo.findOne(gameid).setReservedBy(null);
+				gameRepo.save(gameRepo.findOne(gameid));
+				model.addAttribute("games", gameRepo.findAll());
+				return "borrowlist";
+			}
+	//Loan a game ADMIN
+	@RequestMapping("/loan/{id}/{username}")
+	public String addLoan(@PathVariable("id") Long gameid, @PathVariable("username") String username, Model model) {
+		gameRepo.findOne(gameid).setBorrowedBy(userRepo.findByUsername(username));
+		gameRepo.findOne(gameid).setReservedBy(null);
+		gameRepo.save(gameRepo.findOne(gameid));
+		model.addAttribute("games", gameRepo.findAll());
+		return "borrowlist";
+	}
+	//Return a loan ADMIN
+	@RequestMapping("/return/{id}")
+	public String returnLoan(@PathVariable("id") Long gameid, Model model) {
+		gameRepo.findOne(gameid).setBorrowedBy(null);
+		gameRepo.save(gameRepo.findOne(gameid));
+		model.addAttribute("games", gameRepo.findAll());
+		return "borrowlist";
+	}
+		
+	//Reservations Borrow list ---user link ONLY WORKES WHEN BORROWED BY NOT USED
+		@RequestMapping("/reservations/{username}")
+		public String userReservations(@PathVariable("username") String username, Model model) {
+			model.addAttribute("games", gameRepo.findByReservedBy(userRepo.findByUsername(username)));
+			//model.addAttribute("games", gameRepo.findAll());
+			return "borrowlist"; 
+		}
+		
+	//Loans Borrow list ---user link ONLY WORKES WHEN BORROWED BY NOT USED
+	@RequestMapping("/loans/{username}")
+	public String userLoans(@PathVariable("username") String username, Model model) {
+		model.addAttribute("games", gameRepo.findByBorrowedBy(userRepo.findByUsername(username)));
+		//model.addAttribute("games", gameRepo.findAll());
+		return "borrowlist"; 
+	}
+	
+	//Borrow list ---admin list
+		@RequestMapping("/borrowlist/admin")
+		public String adminGames(Model model) {
+			model.addAttribute("games", gameRepo.findAll());
+			return "borrowlist"; //returns games.html in templates
+		}
+		
 //		@RequestMapping("/reserve/{id}/")
 //		public String addReservation(@PathVariable("id") Long gameid,  Model model) {
 //			gameRepo.findOne(gameid).setReservedBy(userRepo.findByUsername("user"));
@@ -170,6 +227,7 @@ public class GameController {
 		model.addAttribute("genres", genreRepo.findAll());
 		model.addAttribute("languages", langRepo.findAll());
 		model.addAttribute("types", typeRepo.findAll());
+		model.addAttribute("users", userRepo.findAll());
 		return "addgame";
 	}
 	
