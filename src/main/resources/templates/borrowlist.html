@@ -88,7 +88,13 @@
 								<div class="alert alert-success" title="This is loaned out to you">Loaned under your name. Please return after use! &#x1F60A;</div>
 							</div>
 						</td>
-						<td th:if="${game.reservedBy == null}"></td><!-- Only used for if borrowed by no reserve -->
+						<td th:if="${game.reservedBy == null}">
+							<!-- blank for admin to push to next column -->
+							<!-- USER: Loan (if none reserved) -->
+							<div th:if="${game.borrowedBy} != null and ${game.borrowedBy.username} == ${#httpServletRequest.remoteUser}">
+								<div class="alert alert-success" title="This is loaned out to you">Loaned under your name. Please return after use! &#x1F60A;</div>
+							</div>
+						</td><!-- Only used for if borrowed but no reserve -->
 						<!-- ADMIN: Loan -->
 						<td sec:authorize="hasAuthority('ADMIN')">
 							<!-- Loan button -->

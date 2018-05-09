@@ -24,7 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 		.csrf().disable() //allows use of H2-console
 		.authorizeRequests()
-			.antMatchers("h2-console/**").permitAll() //permits all endpoints after h2-console/
+			.antMatchers("h2-console/**", "api/**").permitAll() //permits all endpoints after h2-console/
 			.anyRequest().authenticated()
 			.and()
 		.formLogin()

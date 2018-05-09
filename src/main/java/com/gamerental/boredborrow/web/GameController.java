@@ -1,7 +1,6 @@
 package com.gamerental.boredborrow.web;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,14 +50,6 @@ public class GameController {
 		model.addAttribute("games", gameRepo.findAll());
 		return "games"; //returns games.html in templates
 	}
-	
-	//Show all tables --Debugging (due to h2 not working thanks to authentication)
-		@RequestMapping("/tables")
-		public String showAll(Model model) {
-			model.addAttribute("games", gameRepo.findAll());
-			model.addAttribute("users", userRepo.findAll());
-			return "tables"; //returns games.html in templates
-		}
 	
 //Settings controllers	
 	//Show settings
@@ -130,25 +121,8 @@ public class GameController {
 			userRepo.delete(id); //delete() was replaced with deleteById() in new Spring || !CHANGE THIS!!!
 			return "redirect:../settings";
 		}
-		
-//Adding BookingRecords
-//	//Add a record
-//	@RequestMapping("/sendbooking")
-//	public String addBookingRecord(Model model) {
-//		model.addAttribute("borrowrecord", new BorrowRecord());
-//		return "games";
-//	}
 	
 //// Users
-//	//Push a reservation
-//	@RequestMapping("/sendbooking/{id, userid}") //edits the tuple appropriate id
-//	public String saveReservation(@PathVariable("id") Long gameid, @PathVariable("userid") Long userid, Model model) {
-//		model.addAttribute("game", gameRepo.findOne(gameid));
-//		model.addAttribute("user", userRepo.findOne(userid));
-//		return "reservegame";
-//	}
-		
-		
 	//Reserve a game
 		@RequestMapping("/reserve/{id}/{username}")
 		public String addReservation(@PathVariable("id") Long gameid, @PathVariable("username") String username, Model model) {
@@ -212,12 +186,6 @@ public class GameController {
 			model.addAttribute("games", gameRepo.findAll());
 			return "borrowlist"; //returns games.html in templates
 		}
-		
-//		@RequestMapping("/reserve/{id}/")
-//		public String addReservation(@PathVariable("id") Long gameid,  Model model) {
-//			gameRepo.findOne(gameid).setReservedBy(userRepo.findByUsername("user"));
-//			return "redirect:../../games";
-//		}
 	
 //Adding games
 	//Add a game

@@ -10,14 +10,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.gamerental.boredborrow.web.GameController;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(SpringRunner.class) // JUnit is told to run using Spring's testing support
+@SpringBootTest // annotation for regular tests
 public class BoredborrowSmokeTest {
 	
 	@Autowired
 	private GameController controller;
 	
-	@Test
+	@Test //defines the test method
 	public void contexLoads() throws Exception {
 		assertThat(controller).isNotNull();
 	}

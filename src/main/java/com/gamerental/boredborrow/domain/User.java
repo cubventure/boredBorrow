@@ -8,9 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -40,15 +37,9 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "borrowedBy") //oneToMany relationship declaration
 	private List<Game> bookedGames;
 	
-//	@ManyToMany
-//	@JoinTable(
-//			name="game", 
-//			joinColumns=@JoinColumn(name="reservedBy", referencedColumnName="userid"),
-//			joinColumns=@JoinColumn(name="borrowedBy", referencedColumnName="userid")
-//	private List<Game> games;
+//Constructors
 	
-	
-	public User() {		
+	public User() { //empty constructor		
 	}
 	
 	public User(String username, String passwordHash, String email, String role) {
@@ -58,7 +49,8 @@ public class User {
 		this.email = email;
 		this.role = role;
 	}
-
+	
+//Getters and Setters
 
 	public Long getId() {
 		return userid;

@@ -57,13 +57,13 @@
 		</dependency>
 		<dependency> <!-- Spring Security Thymeleaf dialects: show different content to different roles -->
 			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
-			<version>2.1.2.RELEASE</version>
+			<artifactId>thymeleaf-extras-springsecurity4</artifactId> <!-- Overriding managed version old tag:|| <version>2.1.2.RELEASE</version> -->
+			<!-- Overriding managed version old tag:|| <version>2.1.2.RELEASE</version> -->
 		</dependency>
 		<dependency> <!-- Maria Database -->
 			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>1.5.7</version>
+			<artifactId>mariadb-java-client</artifactId> <!-- Overriding managed version old tag:|| <version>1.5.7</version> -->
+			<!-- Overriding managed version old tag:|| <version>1.5.7</version> -->
 		</dependency>
 		<dependency> <!-- Testing dependency -->
 			<groupId>org.springframework.boot</groupId>

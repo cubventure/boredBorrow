@@ -26,7 +26,7 @@ public class BoredborrowApplication {
 	@Bean
 	public CommandLineRunner demo(GameRepository gameRepo, GenreRepository genreRepo, LanguageRepository langRepo, TypeRepository typeRepo, UserRepository userRepo) {
 		return (args) -> {
-			
+//			
 //			//Create new repositories
 //			genreRepo.save(new Genre("Adventure"));
 //			genreRepo.save(new Genre("Strategy"));
@@ -52,11 +52,13 @@ public class BoredborrowApplication {
 //			gameRepo.save(g3);
 //			gameRepo.save(g4);
 //			
-//			//Create users: user/user admin/admin
+//			//Create users: user/user admin/admin s1/s1
 //			User user1 = new User("user", "$2a$04$hpzD62XOuhNG3.owtMmxWexr40vTjFjP0pbCHt4MOFajyMntjBQGu", "user@boredborrow.com", "USER");
 //			User user2 = new User("admin", "$2a$04$BeQgipK6QK327OvvYsUUSOmWqfST20EgR8Gpurt0y6ukyGPJKKpga", "admin@boredborrow.com", "ADMIN");
 //			userRepo.save(user1);
 //			userRepo.save(user2);
+//			User user3 = new User("s1", "$2a$10$3sBybjMrOU2q.mBmsJMJU.3cb7waDnb4mJn7YdUFDlKZ4Pqm9MEgK", "s1@boredborrow.com", "USER");
+//			userRepo.save(user3);
 		};
 	}
 }

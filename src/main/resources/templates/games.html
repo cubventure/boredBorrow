@@ -77,7 +77,7 @@
 						<td sec:authorize="hasAuthority('USER')">
 							<a class="btn btn-sm btn-info" th:if="(${game.reservedBy} == null and ${game.borrowedBy} == null) or (${game.reservedBy} == null and ${game.borrowedBy} != null and ${game.borrowedBy.username} != ${#httpServletRequest.remoteUser})" th:href="@{/reserve/{id}/{username}(id=${game.id}, username=${#httpServletRequest.remoteUser})}">Reserve</a>
 							
-							<div class="alert alert-secondary reserved" th:if="(${game.reservedBy} != null and ${game.borrowedBy} == null) or (${game.reservedBy} != null and ${game.borrowedBy} != null and ${game.borrowedBy.username} != ${#httpServletRequest.remoteUser}) or (${game.borrowedBy} != null and ${game.reservedBy} != null and ${game.reservedBy.username} != ${#httpServletRequest.remoteUser})" title="This game has already been reserved">&#x29D6;</div>
+							<div class="alert alert-secondary reserved" th:if="(${game.reservedBy} != null and ${game.borrowedBy} == null) or (${game.reservedBy} != null and ${game.borrowedBy} != null and ${game.borrowedBy.username} != ${#httpServletRequest.remoteUser}) or (${game.borrowedBy} != null and ${game.reservedBy} != null and ${game.reservedBy.username} != ${#httpServletRequest.remoteUser}) or (${game.reservedBy} == null and ${game.borrowedBy} != null and ${game.borrowedBy.username} == ${#httpServletRequest.remoteUser})" title="This game has already been reserved">&#x29D6;</div>
 							
 						</td>
 <!-- 						<td> -->

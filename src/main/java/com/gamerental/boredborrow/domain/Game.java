@@ -47,7 +47,7 @@ public class Game {
 	
 	public Game() {} //empty constructor
 	
-	//Constructor
+	//Constructors
 	public Game(String name, String img, Genre genre, Language language, int minPlayers, int maxPlayers, Type type) {
 		super();
 		this.img = img;
@@ -58,8 +58,6 @@ public class Game {
 		this.maxPlayers = maxPlayers;
 		this.type = type;
 	}
-	
-	
 	
 	public Game(long gameid, String name, String img, Genre genre, Language language, int minPlayers, int maxPlayers,
 			Type type, User reservedBy, User borrowedBy) {
@@ -75,37 +73,8 @@ public class Game {
 		this.reservedBy = reservedBy;
 		this.borrowedBy = borrowedBy;
 	}
-
-//	public Game(String name, String img, Genre genre, Language language, int minPlayers, int maxPlayers, Type type, User reservedBy, User borrowedBy) {
-//		super();
-//		this.img = img;
-//		this.name = name;
-//		this.genre = genre;
-//		this.language = language;
-//		this.minPlayers = minPlayers;
-//		this.maxPlayers = maxPlayers;
-//		this.type = type;
-//		this.reservedBy = reservedBy;
-//		this.borrowedBy = borrowedBy;
-//	}
 	
 	//Getters and Setters
-	
-//	public void setReservedBy(User reservedBy) {
-//		this.reservedBy = reservedBy;
-//	}
-//
-//	public User getBorrowedBy() {
-//		return borrowedBy;
-//	}
-//
-//	public void setBorrowedBy(User borrowedBy) {
-//		this.borrowedBy = borrowedBy;
-//	}	
-//	
-//	public User getReservedBy() {
-//		return reservedBy;
-//	}
 
 	public User getReservedBy() {
 		return reservedBy;
