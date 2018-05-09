@@ -65,7 +65,7 @@
 			<artifactId>mariadb-java-client</artifactId>
 			<version>1.5.7</version>
 		</dependency>
-		<dependency>
+		<dependency> <!-- Testing dependency -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
